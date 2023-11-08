@@ -12,8 +12,8 @@ class ChapterPage extends StatefulWidget {
   final int itemCount;
   final Map data;
   int currentIndex;
-  
-  ChapterPage({this.scraper, this.chapterURL, this.chapterNumber, this.itemCount, this.currentIndex, this.data});
+
+  ChapterPage({required this.scraper, required this.chapterURL, required this.chapterNumber, required this.itemCount, required this.currentIndex, required this.data});
 
   @override
   _ChapterPageState createState() => _ChapterPageState();
@@ -52,8 +52,7 @@ class _ChapterPageState extends State<ChapterPage> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        brightness: Brightness.dark, // Status Bar Color Icons
+        automaticallyImplyLeading: false, // Status Bar Color Icons
         backgroundColor: Color(0xFF050B18),
         centerTitle: true,
         title: Row(
@@ -64,7 +63,7 @@ class _ChapterPageState extends State<ChapterPage> {
                 Icons.arrow_back_ios,
                 size: 30.0,
                 color: Colors.white,
-              ), 
+              ),
               onPressed: (){
                 Navigator.pop(context);
               },
@@ -72,10 +71,13 @@ class _ChapterPageState extends State<ChapterPage> {
             Container(
               margin: EdgeInsets.all(5.0),
               width: width * 0.2,
-              child: RaisedButton(
-                color: Color(0xFF050B18),
-                splashColor: Colors.white54,
-                elevation: 5.0,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFF050B18),
+                  onPrimary: Colors.white,
+                  onSurface: Colors.white54,
+                  elevation: 5.0,
+                ),
                 child: Text(
                   "Anterior",
                   style: GoogleFonts.bangers(
@@ -89,9 +91,9 @@ class _ChapterPageState extends State<ChapterPage> {
                     String chapterNumber = widget.data['chaptersNumbers'][widget.currentIndex];
                     Navigator.pop(context);
                     Navigator.push(
-                      context, 
+                      context,
                       MaterialPageRoute(
-                        builder: (context) => 
+                        builder: (context) =>
                         ChapterPage(
                           scraper: widget.scraper,
                           itemCount: widget.data['chaptersNumbers'].length,
@@ -116,16 +118,12 @@ class _ChapterPageState extends State<ChapterPage> {
             Container(
               margin: EdgeInsets.all(5.0),
               width: width * 0.2,
-              child: RaisedButton(
-                color: Color(0xFF050B18),
-                splashColor: Colors.white54,
-                elevation: 5.0,
-                child: Text(
-                  "Próximo",
-                  style: GoogleFonts.bangers(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                  ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFF050B18),
+                  onPrimary: Colors.white,
+                  onSurface: Colors.white54,
+                  elevation: 5.0,
                 ),
                 onPressed: (){
                   if(widget.currentIndex > 0 && widget.currentIndex < widget.itemCount){
@@ -133,9 +131,9 @@ class _ChapterPageState extends State<ChapterPage> {
                     String chapterNumber = widget.data['chaptersNumbers'][widget.currentIndex];
                     Navigator.pop(context);
                     Navigator.push(
-                      context, 
+                      context,
                       MaterialPageRoute(
-                        builder: (context) => 
+                        builder: (context) =>
                         ChapterPage(
                           scraper: widget.scraper,
                           itemCount: widget.data['chaptersNumbers'].length,
@@ -147,11 +145,11 @@ class _ChapterPageState extends State<ChapterPage> {
                       ),
                     );
                   }
-                },
+                }, child: SizedBox(),
               ),
             )
           ],
-        ),
+        ), systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: data == null ?
         Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Color(0xFF050B18)),))
@@ -176,7 +174,7 @@ class _ChapterPageState extends State<ChapterPage> {
                       if(this.mounted) {
                         setState(() {
                           _controller.previousPage(
-                            duration: Duration(milliseconds: 100), 
+                            duration: Duration(milliseconds: 100),
                             curve: Curves.easeIn,
                           );
                           if(_controller.page == 0) {
@@ -185,9 +183,9 @@ class _ChapterPageState extends State<ChapterPage> {
                               String chapterNumber = widget.data['chaptersNumbers'][widget.currentIndex];
                               Navigator.pop(context);
                               Navigator.push(
-                                context, 
+                                context,
                                 MaterialPageRoute(
-                                  builder: (context) => 
+                                  builder: (context) =>
                                   ChapterPage(
                                     scraper: widget.scraper,
                                     itemCount: widget.data['chaptersNumbers'].length,
@@ -214,7 +212,7 @@ class _ChapterPageState extends State<ChapterPage> {
                       if(this.mounted) {
                         setState(() {
                           _controller.nextPage(
-                            duration: Duration(milliseconds: 100), 
+                            duration: Duration(milliseconds: 100),
                             curve: Curves.easeIn,
                           );
                           if(_controller.page == data.length - 1) {
@@ -223,9 +221,9 @@ class _ChapterPageState extends State<ChapterPage> {
                               String chapterNumber = widget.data['chaptersNumbers'][widget.currentIndex];
                               Navigator.pop(context);
                               Navigator.push(
-                                context, 
+                                context,
                                 MaterialPageRoute(
-                                  builder: (context) => 
+                                  builder: (context) =>
                                   ChapterPage(
                                     scraper: widget.scraper,
                                     itemCount: widget.data['chaptersNumbers'].length,

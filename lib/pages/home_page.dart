@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    save.readFile().then((_) => 
+    save.readFile().then((_) =>
       setState(() =>_fileReaded = true)
     );
     scraper.mostRead().then((value) => setState(()=> data = value));
@@ -39,7 +39,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        brightness: Brightness.dark, // Status Bar Color Icons
         backgroundColor: Color(0xFF050B18),
         elevation: 0.0,
         title: Row(
@@ -52,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                   Icons.adb,
                   size: 40.0,
                   color: Colors.white,
-                ), 
+                ),
                 onPressed: (){},
               ),
             ),
@@ -60,7 +59,7 @@ class _HomePageState extends State<HomePage> {
               "Union",
               style: GoogleFonts.bangers(
                 fontSize: height * 0.05,
-                color: Colors.white, 
+                color: Colors.white,
               ),
             ),
             Padding(
@@ -70,10 +69,10 @@ class _HomePageState extends State<HomePage> {
                   Icons.search,
                   size: 40.0,
                   color: Colors.white,
-                ), 
+                ),
                 onPressed: (){
                   Navigator.push(
-                    context, 
+                    context,
                     MaterialPageRoute(builder: (_) => SearchPage(scraper: scraper,),
                     ),
                   ).then((value) => setState((){}));
@@ -81,7 +80,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-        ),
+        ), systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: data != null ? SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -98,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                 "Mais lidos:",
                 style: GoogleFonts.bangers(
                   fontSize: height * 0.03,
-                  color: Color(0xFF050B18), 
+                  color: Color(0xFF050B18),
                 ),
               ),
               CustomPaint(
@@ -118,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                     return GestureDetector(
                       onTap: (){
                         Navigator.push(
-                          context, 
+                          context,
                           MaterialPageRoute(
                             builder: (context) => MangaPage(
                               scraper: scraper,
@@ -138,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(5.0),
                             child: FadeInImage.memoryNetwork(
-                              placeholder: kTransparentImage, 
+                              placeholder: kTransparentImage,
                               image: data[index]['coverUrl'],
                               fit: BoxFit.cover,
                             ),
@@ -158,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                 "Favoritos:",
                 style: GoogleFonts.bangers(
                   fontSize: height * 0.03,
-                  color: Color(0xFF050B18), 
+                  color: Color(0xFF050B18),
                 ),
               ),
               CustomPaint(
@@ -166,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                 painter: LinePainter(),
               ),
               SizedBox(height: 10.0,),
-              _fileReaded ? Container(
+              if (_fileReaded) Container(
                 width: width,
                 height: height * 0.3,
                 child: ListView.builder(
@@ -180,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
-                            context, 
+                            context,
                             MaterialPageRoute(
                               builder: (context) => MangaPage(
                                 scraper: scraper,
@@ -200,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(5.0),
                               child: FadeInImage.memoryNetwork(
-                                placeholder: kTransparentImage, 
+                                placeholder: kTransparentImage,
                                 image: save.data[index][title]["coverUrl"],
                                 fit: BoxFit.cover,
                               ),
@@ -211,8 +210,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
                 )
-              ) :
-              null,
+              ),
             ],
           ),
         ),
@@ -234,7 +232,7 @@ class LinePainter extends CustomPainter {
         paint
       );
     }
-  
+
     @override
     bool shouldRepaint(CustomPainter old) {
     return false;

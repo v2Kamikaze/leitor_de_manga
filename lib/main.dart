@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.white,
-        cursorColor: Colors.white,
-        accentColor: Color(0xFF050B18),
+       /*  cursorColor: Colors.white,
+        accentColor: Color(0xFF050B18), */
       ),
     );
   }

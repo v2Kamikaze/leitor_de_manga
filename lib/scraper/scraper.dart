@@ -5,21 +5,21 @@ import 'dart:convert' show utf8;
 
 class UnionScraper {
   final String baseUrl = 'https://unionmangas.top/manga/';
-  String title;
+  String title = "";
 
   static final UnionScraper _instance = UnionScraper._internal();
   factory UnionScraper() => _instance;
   UnionScraper._internal();
 
-  Future<Map> getChapters() async {
+  Future<Map?> getChapters() async {
     if (title == null) return null;
     var data = {};
 
-    var res = await Client().get(baseUrl + convertTitle('url'));
+    var res = await Client().get((baseUrl + convertTitle('url')!) as Uri);
     var doc = parse(res.body);
 
     data['title'] = convertTitle('page');
-    data['cover'] = doc.querySelector('.img-thumbnail').attributes['src'];
+    data['cover'] = doc.querySelector('.img-thumbnail')?.attributes['src'];
     data['info'] = [];
     var info = doc.querySelectorAll('.col-md-8 h4');
     info.forEach((element) {
@@ -29,7 +29,7 @@ class UnionScraper {
     data['chapters'] = [];
     var links = doc.querySelectorAll('.row .lancamento-linha a');
     links.forEach((element) {
-      if (element.attributes['href'].contains(convertTitle('chapter'))) {
+      if (element.attributes['href']!.contains(convertTitle('chapter') as Pattern)) {
         data['chaptersNumbers'].add(element.text);
         data['chapters'].add({element.text: element.attributes['href']});
       }
@@ -39,12 +39,12 @@ class UnionScraper {
 
   Future<List> getPages(String chapter) async {
     var pages = [];
-    var res = await Client().get(chapter);
+    var res = await Client().get(chapter as Uri);
     var doc = parse(res.body);
     var links = doc.querySelectorAll('img');
 
     links.forEach((element) {
-      if (element.attributes['src'].contains(convertTitle('page'))) {
+      if (element.attributes['src']!.contains(convertTitle('page') as Pattern)) {
         pages.add(element.attributes['src']);
       }
     });
@@ -56,7 +56,7 @@ class UnionScraper {
     var titles = [];
     var covers = [];
 
-    var res = await get('https://unionleitor.top/mangas/visualizacoes');
+    var res = await get('https://unionleitor.top/mangas/visualizacoes' as Uri);
     var resDecoded = utf8.decode(res.bodyBytes, allowMalformed: true);
     var doc = parse(resDecoded);
     var h4 = doc.querySelectorAll('.lancamento-linha h4');
@@ -85,7 +85,7 @@ class UnionScraper {
   // Métodos para formatação do título para as urls
   // ============================================== //
 
-  String convertTitle(String option) {
+  String? convertTitle(String option) {
     var title = this.title;
     if (option == 'url') {
       var words = title.toLowerCase().split(' ');

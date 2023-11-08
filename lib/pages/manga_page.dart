@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:leitor_de_manga/pages/chapter_page.dart';
 import 'package:leitor_de_manga/scraper/data_save.dart/save.dart';
@@ -9,7 +10,7 @@ class MangaPage extends StatefulWidget {
   final UnionScraper scraper;
   final String title;
 
-  MangaPage({this.scraper, this.title});
+  MangaPage({required this.scraper, required this.title});
 
   @override
   _MangaPageState createState() => _MangaPageState();
@@ -18,10 +19,10 @@ class MangaPage extends StatefulWidget {
 class _MangaPageState extends State<MangaPage> {
   bool _isFavorited = false;
   bool _inList = true;
-  PageController _controller;
-  ScrollController _scrollController;
-  Map data;
-  int _currentTile;
+  late PageController _controller;
+  late ScrollController _scrollController;
+  late Map data;
+  late int _currentTile;
   Save save = Save();
   bool readedFile = false;
 
@@ -33,7 +34,7 @@ class _MangaPageState extends State<MangaPage> {
       widget.scraper.title = widget.title;
       widget.scraper.getChapters().then(
         (value) => setState((){
-          data = value;
+          data = value!;
         })
       );
       save.readFile().then((_) {
@@ -51,16 +52,15 @@ class _MangaPageState extends State<MangaPage> {
 
   @override
   Widget build(BuildContext context) {
-    
+
     double appbarHeight = AppBar().preferredSize.height;
     double paddingTop = MediaQuery.of(context).padding.top;
     double height = MediaQuery.of(context).size.height - appbarHeight - paddingTop;
     double width = MediaQuery.of(context).size.width;
-    
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        brightness: Brightness.dark, // Status Bar Color Icons
         backgroundColor: Color(0xFF050B18),
         centerTitle: true,
         title: Text(
@@ -75,7 +75,7 @@ class _MangaPageState extends State<MangaPage> {
             Icons.arrow_back_ios,
             size: 30.0,
             color: Colors.white,
-          ), 
+          ),
           onPressed: (){
             Navigator.pop(context);
           }
@@ -88,16 +88,15 @@ class _MangaPageState extends State<MangaPage> {
                 _isFavorited ? Icons.star : Icons.star_border,
                 color: Colors.white,
                 size: 30.0,
-              ), 
+              ),
               onPressed: (){
-                if(data != null && readedFile){
+                if(readedFile){
                   setState((){
                     _isFavorited = !_isFavorited;
                     if(!_isFavorited) {
                       for(var i = 0 ; i < save.data.length; i++){
                         if(save.data[i].containsKey(widget.title)) {
                           save.data.removeAt(i);
-                          save.add(null,null);
                           break;
                         }
                       }
@@ -116,11 +115,11 @@ class _MangaPageState extends State<MangaPage> {
               }
             ),
           ),
-        ],
+        ], systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
-      body: data == null 
-      ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Color(0xFF050B18))),) 
-      : Column( 
+      body: data == null
+      ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Color(0xFF050B18))),)
+      : Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
@@ -137,7 +136,7 @@ class _MangaPageState extends State<MangaPage> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(5.0),
                     child: FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage, 
+                      placeholder: kTransparentImage,
                       image: data['cover'],
                       width: width * 0.3,
                     ),
@@ -187,11 +186,11 @@ class _MangaPageState extends State<MangaPage> {
                     Icons.view_list,
                     color: _inList ? Color(0xFF050B18) : Colors.grey,
                     size: 30.0,
-                  ), 
+                  ),
                   onPressed: (){
                     _controller.animateToPage(
-                      0, 
-                      duration: Duration(milliseconds: 500), 
+                      0,
+                      duration: Duration(milliseconds: 500),
                       curve: Curves.bounceIn,
                     );
                     setState(() => _inList = true);
@@ -202,11 +201,11 @@ class _MangaPageState extends State<MangaPage> {
                     Icons.grid_on,
                     color: _inList ? Colors.grey : Color(0xFF050B18),
                     size: 30.0,
-                  ), 
+                  ),
                   onPressed: (){
                     _controller.animateToPage(
-                      1, 
-                      duration: Duration(milliseconds: 500), 
+                      1,
+                      duration: Duration(milliseconds: 500),
                       curve: Curves.easeIn,
                     );
                     setState(() => _inList = false);
@@ -247,7 +246,7 @@ class _MangaPageState extends State<MangaPage> {
                           String chapterNumber = data['chaptersNumbers'][index];
                           setState(() => _currentTile = index);
                           Navigator.push(
-                            context, 
+                            context,
                             MaterialPageRoute(
                               builder: (context) => ChapterPage(
                                 itemCount: data['chaptersNumbers'].length,
@@ -263,7 +262,7 @@ class _MangaPageState extends State<MangaPage> {
                       ),
                     );
                   }
-                ), 
+                ),
                 GridView.builder(
                   controller: _scrollController,
                   physics: BouncingScrollPhysics(),
@@ -271,7 +270,7 @@ class _MangaPageState extends State<MangaPage> {
                   itemCount: data['chaptersNumbers'].length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 5
-                  ), 
+                  ),
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       child: Card(
@@ -292,7 +291,7 @@ class _MangaPageState extends State<MangaPage> {
                         var chapterNumber = data['chaptersNumbers'][index];
                         setState(() => _currentTile = index);
                         Navigator.push(
-                          context, 
+                          context,
                           MaterialPageRoute(
                             builder: (context) => ChapterPage(
                               scraper: widget.scraper,
@@ -309,7 +308,7 @@ class _MangaPageState extends State<MangaPage> {
                   }
                 ),
               ],
-            ) 
+            )
           ),
         ],
       )
